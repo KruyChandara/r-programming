@@ -1,0 +1,176 @@
+---
+title: "KruyChandara"
+output: pdf_document
+---
+# 1 Write a R code to Generate 6X6 matrix (A) using the random numbers between 1 to 100 generate another 6x6 matrix (B) using random numbers between 500 to 600
+```{r}
+matrixA = sample(1:100, 36, replace=FALSE)
+matrixB = sample(500:600, 36, replace=FALSE)
+
+# set dimension of matrix
+dim(matrixA) = c(6, 6)
+dim(matrixB) = c(6, 6)
+matrixA
+matrixB
+```
+
+## A. find the range of matric A & B
+```{r}
+range(matrixA)
+range(matrixB)
+```
+## B. find the max value of each row
+```{r}
+# Loop over my_matrix
+for(row in 1:nrow(matrixA)) {
+    print(max(matrixA[row,]))
+    print(max(matrixB[row,]))
+}
+```
+
+## C. Find the diagonal values of matrices A&B.
+```{r}
+diag(matrixA)
+diag(matrixB)
+```
+## D. Multiply matrices A and B.
+```{r}
+matrixA %*% matrixB
+```
+
+## E.Replace the 4th row of Matrix A with diagonal values of matrix B
+```{r}
+matrixA[4,] = diag(matrixB)
+matrixA
+```
+## F.Multiply matrices A &amp; B and store the values on X.
+```{r}
+X = matrixA %*% matrixB
+X
+```
+## G.Divide the matrix A with matrix B. 
+```{r}
+d = matrixA %/% matrixB
+d
+```
+
+# 2. Create a table using dataframe/tibble with the following categories(a to f) (10 marks)
+```{r}
+first_name_sample = c("Dara", "Chris", "Richard", "Chhay", "Tong", "Teng", "Zorn", "Vorn", "Jin", "Joy")
+occ_name_sample = c("Docter", "Nurse", "Student", "Student", "Student", "Student", "Student", "Student", "Student", "Student")
+place_name_sample = c("PP", "KPC", "KTS", "New York", "PP", "PP", "PP", "PP", "PP", "PP")
+second_name_sample = first_name_sample[10:1]
+sample_dt<-data.frame(first_name=first_name_sample, second_name=second_name_sample, age=18:27, occupation=occ_name_sample, place=place_name_sample, random_number=sample(1:100, 10, replace=FALSE))
+sample_dt
+# g. extract last column
+last_column = sample_dt[,6]
+# h. find sum and mean
+sum(last_column)
+mean(last_column)
+```
+# 3. Create a .txt file (Minimum : 150 words) with the latest news (In English) in cambodia from the official news agency’s website(Note: Include the reference link) and do the following
+
+```{r}
+# a. read text file
+text = read_file(paste(getwd(), "/text.txt", sep=""))
+text
+
+# b. perofrm tokenizatin and count word
+library(tidytext) # for tokenization
+library(ggplot2) # for graph visualization
+library(dplyr)
+
+dataset <- data.frame(Text=text)%>% 
+  unnest_tokens(Info, Text) %>%
+  count(Info, sort=TRUE) # plot the graph using ggplot2
+
+# c. Identify the most repeated word and replace that word with “KIT”
+arr_dt = arrange(dataset, desc(n))
+most_repeat = arr_dt[1,]
+most_repeat
+replace_kit = sub(most_repeat[1,][,1], "KIT", text)
+replace_kit
+
+# d. Perform the sentiment analysis
+
+library(sentimentr)
+sen1 = sentiment(text) # To know number of sentences and words(Sentiment at the sentence level)
+print(sen1)
+sen2 = sentiment_by(text) # total number of words 
+print(sen2)
+sen3 = get_sentences(text) # To display the sentences
+print(sen3)
+sen4<- emotion(text) # Emotion at the sentence level
+print(sen4)
+sen5<- emotion_by(text) # Aggregated emotion by group(s)
+print(sen5)
+sen6<- profanity(text) # Profanity at the sentence level
+print(sen6)
+sen7<- profanity_by(text) # Aggregated profanity by group(s)
+sen7
+
+# e. Plot graph
+graph = data.frame(Text=text)%>% 
+  unnest_tokens(Info, Text) %>%
+  count(Info, sort=TRUE)  %>% 
+  ggplot(aes(n, Info)) + geom_col() +
+  xlab("Number of words") +
+  ylab("List of word") +
+  ggtitle("Text mining using R") +
+  theme(axis.title.x=element_text(size=10, color="blue", face="bold", margin=margin(t=20)),
+        axis.title.y=element_text(size=10, color="red", face="bold", margin=margin(r=20)),
+        plot.title=element_text(size=25, color="yellow", face="bold", margin=margin(b=20)))
+graph
+```
+# 4. Find data set from link and do
+```{r}
+# a.import and clean data
+data <- read.csv("https://raw.githubusercontent.com/fivethirtyeight/data/master/drug-use-by-age/drug-use-by-age.csv")
+data
+clean_data <- lapply(data, function(x) { 
+  x[is.na(x)] <- mean(x, na.rm = TRUE)
+  x
+})
+clean_data
+
+# b.define x and y
+# x should be number of age and y should be the number of alcohol use or any other drugs because that we can analyse about the reason why people at which age are addicted to what drug and
+# that might lead to solution of preventing addiction.
+
+# c. plot graph
+gph_col = ggplot(data, aes(x=age, y=alcohol.use)) +
+  xlab("Age") +
+  ylab("Alcohol use") +
+  geom_col()+
+  ggtitle("Alcohol use on age") +
+  geom_smooth(method="lm") +
+  theme(axis.title.x=element_text(size=10, color="blue", face="bold", margin=margin(t=20)),
+        axis.title.y=element_text(size=10, color="red", face="bold", margin=margin(r=20)),
+        plot.title=element_text(size=25, color="yellow", face="bold", margin=margin(b=20)))
+gph_col
+gph_lm = ggplot(data, aes(x=age, y=alcohol.use))  +
+  xlab("Age") +
+  ylab("Alcohol use") +
+  geom_point(size=3, alpha = 1/3) +
+  ggtitle("Alcohol use on age") +
+  geom_smooth(method="lm") +
+  theme(axis.title.x=element_text(size=10, color="blue", face="bold", margin=margin(t=20)),
+        axis.title.y=element_text(size=10, color="red", face="bold", margin=margin(r=20)),
+        plot.title=element_text(size=25, color="yellow", face="bold", margin=margin(b=20)))
+gph_lm
+ggsave(filename="kruychandaragraph_point.png", units="cm", width=25, height=25)
+
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
