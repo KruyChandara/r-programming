@@ -50,7 +50,8 @@ X
 ```
 ## G.Divide the matrix A with matrix B. 
 ```{r}
-d = matrixA %/% matrixB
+solve = solve(matrixB)
+d = matrixA %*% solve
 d
 ```
 
