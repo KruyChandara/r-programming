@@ -61,7 +61,7 @@ first_name_sample = c("Dara", "Chris", "Richard", "Chhay", "Tong", "Teng", "Zorn
 occ_name_sample = c("Docter", "Nurse", "Student", "Student", "Student", "Student", "Student", "Student", "Student", "Student")
 place_name_sample = c("PP", "KPC", "KTS", "New York", "PP", "PP", "PP", "PP", "PP", "PP")
 second_name_sample = first_name_sample[10:1]
-sample_dt<-data.frame(first_name=first_name_sample, second_name=second_name_sample, age=18:27, occupation=occ_name_sample, place=place_name_sample, random_number=sample(1:100, 10, replace=FALSE))
+sample_dt<-data.frame(first_name=first_name_sample, second_name=second_name_sample, age=18:27, occupation=occ_name_sample, place=place_name_sample, random_number=sample(1:10, 10, replace=FALSE))
 sample_dt
 # g. extract last column
 last_column = sample_dt[,6]
